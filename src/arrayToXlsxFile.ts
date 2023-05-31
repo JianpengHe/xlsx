@@ -1,5 +1,5 @@
 import { createZipFile } from "./createZipFile";
-import * as fs from "fs";
+// import * as fs from "fs";
 
 const fileList = [
   {
@@ -39,7 +39,7 @@ const numberToArrangeId = (value: number) => {
   return o.toUpperCase();
 };
 
-export const arrayToXlsxFile = (data: (number | string)[][]) => {
+export const arrayToXlsxFile = (data: (number | string | undefined)[][]) => {
   /** 行 */
   let rowCount = data.length;
   /** 列 */
@@ -50,13 +50,19 @@ export const arrayToXlsxFile = (data: (number | string)[][]) => {
     .map(
       (rows, x) =>
         `<row r="${x + 1}" spans="1:${arrangeCount}">${rows
-          .map((value, y) =>
-            typeof value === "number"
-              ? `<c r="${numberToArrangeId(y)}${x + 1}"><v>${value}</v></c>`
-              : `<c r="${numberToArrangeId(y)}${x + 1}" t="s"><v>${
-                  sharedStringsMap.get(value) ?? sharedStringsMap.set(value, sharedStringsMap.size).get(value)
-                }</v></c>`
-          )
+          .map((value, y) => {
+            if (typeof value === "number") {
+              return `<c r="${numberToArrangeId(y)}${x + 1}"><v>${value}</v></c>`;
+            }
+            if (!value) {
+              return "";
+            }
+            value = String(value);
+            if (!sharedStringsMap.has(value)) {
+              sharedStringsMap.set(value, sharedStringsMap.size);
+            }
+            return `<c r="${numberToArrangeId(y)}${x + 1}" t="s"><v>${sharedStringsMap.get(value)}</v></c>`;
+          })
           .join("")}</row>`
     )
     .join("");
@@ -83,8 +89,9 @@ export const arrayToXlsxFile = (data: (number | string)[][]) => {
 /** 测试用例 */
 // const f = fs.createWriteStream("2.xlsx");
 // const bufs = arrayToXlsxFile([
-//   [3, 54, "sgr", "dsf"],
-//   [3456, "jsidf"],
+//   [3, 54, "sgr", undefined, "dsf"],
+//   [3456, undefined, undefined, "jsidf"],
+//   [undefined, 34],
 // ]);
 // const bufs = createZipFile(
 //   fileList.map(({ name, data }) => ({ name, data: data ? fs.readFileSync("../xlsx文件样本/普通样本/" + name) : "" }))

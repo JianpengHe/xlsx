@@ -1,0 +1,25 @@
+{
+  "name": "xlsx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JianpengHe/xlsx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JianpengHe/xlsx/issues"
+  },
+  "homepage": "https://github.com/JianpengHe/xlsx#readme",
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "prettier": "^2.8.4",
+    "typescript": "^5.0.4"
+  }
+}
